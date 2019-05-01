@@ -12,7 +12,7 @@ Instruction:
 3. From plugin menu choose action
 4. Enjoy profit :)
 
-+While holding Caps key while moving cursor you can easy show lines around.
++While holding Caps key when moving cursor you can easily show lines around.
 
 Special Thanks to:
 ----
