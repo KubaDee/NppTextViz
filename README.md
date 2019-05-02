@@ -27,3 +27,4 @@ Initial release
 
 TODO:
 ----
+Adding Caps-holding unfolding lines to sequence
