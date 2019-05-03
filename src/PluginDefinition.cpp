@@ -495,7 +495,7 @@ bool SetClipboard(char* textToclipboard)
 {
 	CString txtToClp;
 	txtToClp.Format(_T("%s"), textToclipboard);
-	SetClipboard(txtToClp);
+	return SetClipboard(txtToClp);
 }
 
 /// Append CString to Clipboard
