@@ -22,9 +22,13 @@ Chris Severance for TextFX
 Latest Updates:
 ----
 
+### v0.2
+Caps-key unfolding lines is now recorded as sequence  
+Minor typos in menu
+
 ### v0.1
 Initial release
 
 TODO:
 ----
-Adding Caps-holding unfolding lines to sequence
+DONE: Adding Caps-holding unfolding lines to sequence

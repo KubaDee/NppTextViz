@@ -98,6 +98,11 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 						curline = prevline + dir;
 						SENDMSGTOCED(currentEdit, SCI_SHOWLINES, curline, curline);
 						SENDMSGTOCED(currentEdit, SCI_GOTOPOS, SENDMSGTOCED(currentEdit, SCI_FINDCOLUMN, curline, col), 0);
+						if (curline && AlterMenuCheck(FindMenuItem(doUpdateCapsSeq), '-')) {
+							CString cstrTemp;
+							cstrTemp.Format(_T("+[%d-%d]"), curline, curline + 2);
+							AppendSequence(cstrTemp);
+						}
 					}
 				}
 			}

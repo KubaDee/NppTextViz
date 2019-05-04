@@ -42,6 +42,7 @@ long stStepPosition = 0; // for single stepping
 BOOL bVizWholeWords = FALSE;
 BOOL bVizCaseSensitive = FALSE;
 BOOL bVizRegExp = FALSE;
+BOOL bVizCapsSeq = FALSE;
 // set flags according search conf
 #define VIZMENUFLAGS ((bVizCaseSensitive?SCFIND_MATCHCASE:0)|(bVizWholeWords?SCFIND_WHOLEWORD:0)|(bVizRegExp?SCFIND_REGEXP:0))
 
@@ -49,6 +50,7 @@ BOOL bVizRegExp = FALSE;
 unsigned miVizWholeWords; void doUpdateConfWholeWords() { bVizWholeWords = AlterMenuCheck(miVizWholeWords, '!'); }
 unsigned miVizRegExp; void doUpdateConfRegExp() { bVizRegExp = AlterMenuCheck(miVizRegExp, '!'); }
 unsigned miVizCaseSens; void doUpdateConfCaseSens() { bVizCaseSensitive = AlterMenuCheck(miVizCaseSens, '!'); }
+unsigned miVizCapsSeq; void doUpdateCapsSeq() { bVizCapsSeq = AlterMenuCheck(miVizCapsSeq, '!'); }
 
 
 //
@@ -200,11 +202,11 @@ void commandMenuInit()
 	//            ShortcutKey *shortcut,          // optional. Define a shortcut to trigger this command
 	//            bool check0nInit                // optional. Make this menu item be checked visually
 	//            );
-	setCommand(0,  TEXT("Hide selected or all text"), doHideSelectedOrAllLines, NULL, false);
-	setCommand(1,  TEXT("Show selected or all text"), doShowSelectedOrAllLines, NULL, false);
-	setCommand(2,  TEXT("Invert visibility"), doInvertSelectedOrAllLines, NULL, false);
+	setCommand(0,  TEXT("Show selected or reset all lines"), doShowSelectedOrAllLines, NULL, false); 
+	setCommand(1,  TEXT("Hide selected or hide all lines"), doHideSelectedOrAllLines, NULL, false);
+	setCommand(2,  TEXT("Invert selected visibility"), doInvertSelectedOrAllLines, NULL, false);
 	setCommand(3,  TEXT("----"), NULL, NULL, false);
-	setCommand(4,  TEXT("Hide linec with clipboard text"), doLinesHideWith, NULL, false);
+	setCommand(4,  TEXT("Hide lines with clipboard text"), doLinesHideWith, NULL, false);
 	setCommand(5,  TEXT("Hide lines without clipboard text"), doLinesHideWithout, NULL, false);
 	setCommand(6,  TEXT("Show lines with clipboard text"), doLinesShowWith, NULL, false);
 	setCommand(7,  TEXT("Show lines without clipboard text"), doLinesShowWithout, NULL, false);
@@ -232,8 +234,9 @@ void commandMenuInit()
 	setCommand(29, TEXT("Search Whole Words"), doUpdateConfWholeWords, NULL, bVizWholeWords!=0); // VS2015 140_xp
 	setCommand(30, TEXT("Search Case sensitive"), doUpdateConfCaseSens, NULL, bVizCaseSensitive!=0); // VS2015 140_xp
 	setCommand(31, TEXT("Search RegEx"), doUpdateConfRegExp, NULL, bVizRegExp != 0); // VS2015 140_xp
-	setCommand(32, TEXT("(----"), NULL, NULL, false);
-	setCommand(33, TEXT("About"), doAboutDlg, NULL, false);
+	setCommand(32, TEXT("Record Caps unfolding"), doUpdateCapsSeq, NULL, bVizCapsSeq!=0); // VS2015 140_xp
+	setCommand(33, TEXT("(----"), NULL, NULL, false);
+	setCommand(34, TEXT("About"), doAboutDlg, NULL, false);
 }
 
 //
@@ -504,6 +507,13 @@ void AppendClipboard(CString cstrText)
 	SetClipboard(GetClipboard() + cstrText);
 }
 
+/// Append CString to cstrSequence
+void AppendSequence(CString cstrText)
+{
+	cstrSequence.AppendFormat(cstrText + _T("\r\n"));
+}
+
+
 /// Provede operaci se schrankou
 void ClipLinesRoutine(char reveal, BOOL complementary, unsigned searchflags)
 {
@@ -679,6 +689,7 @@ void IniSaveSettings(bool save)
 	const TCHAR keyWholeWords[] = TEXT("WholeWordSearch");
 	const TCHAR keyRegpExpSearch[] = TEXT("RegExpSearch");
 	const TCHAR keyCaseSensitiveSearch[] = TEXT("CaseSensitiveSearch");
+	const TCHAR keyCapsSeq[] = TEXT("CapsSequence");
 	const TCHAR configFileName[] = TEXT("NppTextViz.ini");
 	TCHAR iniFilePath[MAX_PATH];
 
@@ -686,6 +697,7 @@ void IniSaveSettings(bool save)
 	miVizWholeWords = FindMenuItem(doUpdateConfWholeWords);
 	miVizCaseSens = FindMenuItem(doUpdateConfCaseSens);
 	miVizRegExp = FindMenuItem(doUpdateConfRegExp);
+	miVizCapsSeq = FindMenuItem(doUpdateCapsSeq);
 
 	// get path of plugin configuration
 	SendMessage(nppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, (LPARAM)iniFilePath);
@@ -701,6 +713,7 @@ void IniSaveSettings(bool save)
 		bVizWholeWords = AlterMenuCheck(miVizWholeWords, (GetPrivateProfileInt(sectionSearch, keyWholeWords, 0, iniFilePath) != 0) ? '1' : '0');
 		bVizRegExp = AlterMenuCheck(miVizRegExp, (GetPrivateProfileInt(sectionSearch, keyRegpExpSearch, 0, iniFilePath) != 0) ? '1' : '0');
 		bVizCaseSensitive = AlterMenuCheck(miVizCaseSens, (GetPrivateProfileInt(sectionSearch, keyCaseSensitiveSearch, 0, iniFilePath) != 0) ? '1' : '0');
+		bVizCapsSeq = AlterMenuCheck(miVizCapsSeq, (GetPrivateProfileInt(sectionSearch, keyCapsSeq, 0, iniFilePath) != 0) ? '1' : '0');
 
 		VIZMENUFLAGS;
 	}
@@ -708,6 +721,7 @@ void IniSaveSettings(bool save)
 		WritePrivateProfileString(sectionSearch, keyWholeWords, bVizWholeWords ? TEXT("1") : TEXT("0"), iniFilePath);
 		WritePrivateProfileString(sectionSearch, keyCaseSensitiveSearch, bVizCaseSensitive ? TEXT("1") : TEXT("0"), iniFilePath);
 		WritePrivateProfileString(sectionSearch, keyRegpExpSearch, bVizRegExp ? TEXT("1") : TEXT("0"), iniFilePath);
+		WritePrivateProfileString(sectionSearch, keyCapsSeq, bVizCapsSeq ? TEXT("1") : TEXT("0"), iniFilePath);
 	}
 }
 
