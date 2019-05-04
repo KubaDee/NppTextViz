@@ -229,9 +229,9 @@ void commandMenuInit()
 	setCommand(26, TEXT("Copy selected as sequence"), doSelectedAsSequence, NULL, false);
 	setCommand(27, TEXT("Paste Hide/Show sequence"), doInsertSequence, NULL, false);
 	setCommand(28, TEXT("(----"), NULL, NULL, false);
-	setCommand(29, TEXT("Search Whole Words"), doUpdateConfWholeWords, NULL, bVizWholeWords);
-	setCommand(30, TEXT("Search Case sensitive"), doUpdateConfCaseSens, NULL, bVizCaseSensitive);
-	setCommand(31, TEXT("Search RegEx"), doUpdateConfRegExp, NULL, bVizRegExp);
+	setCommand(29, TEXT("Search Whole Words"), doUpdateConfWholeWords, NULL, bVizWholeWords!=0); // VS2015 140_xp
+	setCommand(30, TEXT("Search Case sensitive"), doUpdateConfCaseSens, NULL, bVizCaseSensitive!=0); // VS2015 140_xp
+	setCommand(31, TEXT("Search RegEx"), doUpdateConfRegExp, NULL, bVizRegExp != 0); // VS2015 140_xp
 	setCommand(32, TEXT("(----"), NULL, NULL, false);
 	setCommand(33, TEXT("About"), doAboutDlg, NULL, false);
 }
@@ -362,7 +362,7 @@ bool ShowHideLinesRoutine(INT_CURRENTEDIT, const char *str, char reveal, BOOL co
 		} while (flags&FLAG_CONTINUE);
 		SENDMSGTOCED(currentEdit, SCI_GOTOPOS, curpos, 0);
 	}
-	return(rv);
+	return(rv!=0); // VS2015 140_xp
 #undef FLAG_CONTINUE
 #undef FLAG_FIRST
 }
