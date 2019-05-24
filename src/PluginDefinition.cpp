@@ -972,10 +972,10 @@ void doSelectedAsSequence()
 {
 	INT_CURRENTEDIT;
 	GET_CURRENTEDIT;
-	TCHAR *rv;
+	const char *rv;
 	unsigned st;
 
-	if ((st = (long)SENDMSGTOCED(currentEdit, SCI_GETSELTEXT, 0, NULL)) > 1 && ((rv = (TCHAR *) mallocsafe((st + 1) * sizeof(TCHAR))) != NULL)) {
+	if ((st = (long)SENDMSGTOCED(currentEdit, SCI_GETSELTEXT, 0, NULL)) > 1 && ((rv = (char *) mallocsafe((st + 1) * sizeof(char))) != NULL)) {
 		SENDMSGTOCED(currentEdit, SCI_GETSELTEXT, 0, rv);
 		cstrSequence = rv;
 
