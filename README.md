@@ -22,6 +22,10 @@ Chris Severance for TextFX
 Latest Updates:
 ----
 
+### v0.3
+New Sequence dialog - you can easily show or edit current sequence  
+Minor bug fixed
+
 ### v0.2
 Caps-key unfolding lines is now recorded as sequence  
 Minor typos in menu

@@ -15,21 +15,21 @@
 //along with this program; if not, write to the Free Software
 //Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-#ifndef SEARCHBOX_DLG_H
-#define SEARCHBOX_DLG_H
+#ifndef SEQUENCEBOX_DLG_H
+#define SEQUENCEBOX_DLG_H
 
 #include "DockingDlgInterface.h"
 #include "resource.h"
 
-class SearchBoxDemoDlg : public DockingDlgInterface
+class SequenceBoxDlg : public DockingDlgInterface
 {
 public :
-	SearchBoxDemoDlg() : DockingDlgInterface(IDD_SEARCHBOX){};
+	SequenceBoxDlg() : DockingDlgInterface(IDD_SEQUENCEBOX){};
 
     virtual void display(bool toShow = true) const {
         DockingDlgInterface::display(toShow);
         if (toShow)
-            ::SetFocus(::GetDlgItem(_hSelf, ID_GOLINE_EDIT));
+            ::SetFocus(::GetDlgItem(_hSelf, ID_SEQUENCE_EDIT));
     };
 
 	void setParent(HWND parent2set){
@@ -43,10 +43,28 @@ private :
 
     int getLine() const {
         BOOL isSuccessful;
-        int line = ::GetDlgItemInt(_hSelf, ID_GOLINE_EDIT, &isSuccessful, FALSE);
+		int line = GetDlgItemInt(_hSelf, ID_SEQUENCE_EDIT, &isSuccessful, FALSE);
         return (isSuccessful?line:-1);
     };
 
+	TCHAR * getSequence() const {
+		TCHAR * tcsText;
+		HWND hwDlgItem = GetDlgItem(_hSelf, ID_SEQUENCE_EDIT);
+		int bufSize = GetWindowTextLength(hwDlgItem);
+		tcsText = (TCHAR *) malloc(bufSize * (sizeof(TCHAR) + 1));
+		GetDlgItemText(_hSelf, ID_SEQUENCE_EDIT, tcsText, bufSize);
+		return tcsText;
+	};
+
+	void setSequence( TCHAR * tcsText) {
+		SetDlgItemText(_hSelf, ID_SEQUENCE_EDIT, tcsText);
+	};
+
+	void setInvertEditButton() {
+		BOOL bStatus = (int)SendDlgItemMessage(_hSelf, ID_CHECKEDIT, BM_GETCHECK, 0, 0);
+		EnableWindow(GetDlgItem(_hSelf, IDSET), bStatus); // change Button
+		SendMessage(GetDlgItem(_hSelf, ID_SEQUENCE_EDIT), EM_SETREADONLY, !bStatus, 0); // change edit text
+	};
 };
 
-#endif //SEARCHBOX_DLG_H
+#endif //SEQUENCEBOX_DLG_H

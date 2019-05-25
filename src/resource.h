@@ -2,6 +2,7 @@
 // Microsoft Visual C++ vygeneroval soubor zahrnutí.
 // Použito NppTextViz.rc
 //
+/*
 #define SW_HIDE                         0
 #define HIDE_WINDOW                     0
 #define WM_NULL                         0x0000
@@ -63,7 +64,7 @@
 #define CS_VREDRAW                      0x0001
 #define CF_TEXT                         1
 #define SCF_ISSECURE                    0x00000001
-#define IDOK                            1
+#define IDSET                            1
 #define BN_PAINT                        1
 #define BST_CHECKED                     0x0001
 #define TBSTYLE_SEP                     0x0001
@@ -1568,3 +1569,4 @@
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
+*/

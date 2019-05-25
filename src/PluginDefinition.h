@@ -31,7 +31,7 @@
 //
 #define PLUGIN_NAME "TextViz"
 const TCHAR NPP_PLUGIN_NAME[] = TEXT(PLUGIN_NAME);
-#define PLUGIN_VERSION "0.2"
+#define PLUGIN_VERSION "0.3"
 
 
 //-----------------------------------------------//
@@ -40,7 +40,7 @@ const TCHAR NPP_PLUGIN_NAME[] = TEXT(PLUGIN_NAME);
 //
 // Here define the number of your plugin commands
 //
-const int nbFunc = 35;
+const int nbFunc = 36;
 
 
 //
@@ -86,6 +86,10 @@ CString GetClipboard();
 bool SetClipboard(CString textToclipboard);
 void AppendClipboard(CString cstrText);
 void AppendSequence(CString cstrText);
+void SetSequence(TCHAR cstrText);
+void SetSequence(TCHAR * cstrText);
+size_t GetLineBegin();
+TCHAR * GetSequence();
 void CopyCutDelRoutine(unsigned flags, char which);
 void doCutVisible();
 void doCutHidden();

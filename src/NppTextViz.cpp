@@ -16,11 +16,11 @@
 //Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "PluginDefinition.h"
-//#include "DockingFeature/searchBoxDlg.h"
+#include "DockingFeature/sequenceBoxDlg.h"
 
 extern FuncItem funcItem[nbFunc];
 extern NppData nppData;
-//extern SearchBoxDemoDlg _SearchBox;
+extern SequenceBoxDlg _SequenceBox;
 
 #define INT_CURRENTEDIT int currentEdit
 #define GET_CURRENTEDIT ::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&currentEdit)

@@ -18,7 +18,7 @@
 #include "PluginDefinition.h"
 #include "menuCmdID.h"
 #include <atlstr.h>
-//#include "DockingFeature/searchBoxDlg.h"
+#include "DockingFeature/sequenceBoxDlg.h"
 
 //
 // The plugin data that Notepad++ needs
@@ -88,7 +88,7 @@ UINT cfColumnSelect;
 //
 // SearchBox DLG
 //
-//SearchBoxDemoDlg _SearchBox;
+SequenceBoxDlg _SequenceBox;
 
 
 //
@@ -173,11 +173,11 @@ bool strcatX(char**(orig), const char* concatenateText)
 //
 // Initialize your plugin data here
 // It will be called while plugin loading   
-void pluginInit(HANDLE /*hModule*/)
+void pluginInit(HANDLE hModule)
 {
 	cfColumnSelect = RegisterClipboardFormat(_T("MSDEVColumnSelect"));
 	// tady se spousti search box
-	//_SearchBox.init((HINSTANCE)hModule, NULL);
+	_SequenceBox.init((HINSTANCE)hModule, NULL);
 }
 
 //
@@ -202,8 +202,8 @@ void commandMenuInit()
 	//            ShortcutKey *shortcut,          // optional. Define a shortcut to trigger this command
 	//            bool check0nInit                // optional. Make this menu item be checked visually
 	//            );
-	setCommand(0,  TEXT("Show selected or reset all lines"), doShowSelectedOrAllLines, NULL, false); 
-	setCommand(1,  TEXT("Hide selected or hide all lines"), doHideSelectedOrAllLines, NULL, false);
+	setCommand(0,  TEXT("Hide selected or hide all lines"), doHideSelectedOrAllLines, NULL, false);
+	setCommand(1,  TEXT("Show selected or reset all lines"), doShowSelectedOrAllLines, NULL, false);
 	setCommand(2,  TEXT("Invert selected visibility"), doInvertSelectedOrAllLines, NULL, false);
 	setCommand(3,  TEXT("----"), NULL, NULL, false);
 	setCommand(4,  TEXT("Hide lines with clipboard text"), doLinesHideWith, NULL, false);
@@ -236,7 +236,8 @@ void commandMenuInit()
 	setCommand(31, TEXT("Search RegEx"), doUpdateConfRegExp, NULL, bVizRegExp != 0); // VS2015 140_xp
 	setCommand(32, TEXT("Record Caps unfolding"), doUpdateCapsSeq, NULL, bVizCapsSeq!=0); // VS2015 140_xp
 	setCommand(33, TEXT("(----"), NULL, NULL, false);
-	setCommand(34, TEXT("About"), doAboutDlg, NULL, false);
+	setCommand(34, TEXT("Sequence Box"), DockableDlgDemo, NULL, false);
+	setCommand(35, TEXT("About"), doAboutDlg, NULL, false);
 }
 
 //
@@ -511,8 +512,42 @@ void AppendClipboard(CString cstrText)
 void AppendSequence(CString cstrText)
 {
 	cstrSequence.AppendFormat(cstrText + _T("\r\n"));
+
+	// update modal window
+	SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, IDGET, 0); // to refresh sequence edittext
 }
 
+/// Set CString to cstrSequence
+void SetSequence(TCHAR cstrText)
+{
+	cstrSequence.Format(cstrText + _T("\r\n"));
+
+	// update modal window
+	SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, IDGET, 0);
+}
+
+/// Set CString to cstrSequence
+void SetSequence(TCHAR * cstrText)
+{
+	cstrSequence.Format(cstrText);
+	cstrSequence.AppendFormat(_T("\r\n"));
+
+	// update modal window
+	SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, IDGET, 0);
+}
+
+/// Return Sequence
+TCHAR * GetSequence()
+{
+	TCHAR * buf = cstrSequence.GetBuffer();
+	cstrSequence.ReleaseBuffer();
+	return buf;
+}
+
+/// Return current step position
+size_t GetLineBegin() {
+	return stStepPosition;
+}
 
 /// Provede operaci se schrankou
 void ClipLinesRoutine(char reveal, BOOL complementary, unsigned searchflags)
@@ -537,6 +572,9 @@ void ClipLinesRoutine(char reveal, BOOL complementary, unsigned searchflags)
 				(searchflags&SCFIND_REGEXP) ? _T("r") : _T(""),
 				va.GetBuffer());
 			va.ReleaseBuffer();
+
+			// update modal window
+			SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, IDGET, 0);
 		}
 	}
 	else {
@@ -816,6 +854,9 @@ void InvertSelectedOrAllLines(char reveal)
 		InvertSelectionRoutine(currentEdit, reveal, curline + 1, L1, L2);
 		SENDMSGTOCED(currentEdit, SCI_GOTOPOS, curpos, 0);
 	}
+
+	// update modal window
+	SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, IDGET, 0);
 }
 
 void doHideSelectedOrAllLines()
@@ -872,6 +913,7 @@ void doSequenceNext()
 	long curpos = (long)SENDMSGTOCED(currentEdit, SCI_GETCURRENTPOS, 0, 0);
 	long curline = (long)SENDMSGTOCED(currentEdit, SCI_LINEFROMPOSITION, curpos, 0);
 	TCHAR * tchSequence = cstrSequence.GetBuffer();
+	cstrSequence.ReleaseBuffer();
 
 	long eol = stStepPosition + (long)wcscspn(tchSequence + stStepPosition, _T("\r\n"));
 	char chtemp = (char)tchSequence[eol];
@@ -941,6 +983,7 @@ void doSequenceNext()
 		stStepPosition++;
 	}
 	SENDMSGTOCED(currentEdit, SCI_GOTOPOS, curpos, 0);
+	SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, ID_UPDATE_SEQUENCE_SELECTED, 0); // to refresh sequence selected
 }
 
 void doSequenceRest()
@@ -949,6 +992,8 @@ void doSequenceRest()
 		_T(PLUGIN_NAME), MB_OK | MB_ICONINFORMATION);
 	else
 		while (cstrSequence[stStepPosition]) doSequenceNext();
+
+	SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, ID_UPDATE_SEQUENCE_SELECTED, 0); // to refresh sequence selected
 }
 
 void doSequenceStart()
@@ -999,6 +1044,9 @@ void doSelectedAsSequence()
 		cstrSequence.Replace(_T("\r\r"), _T("\r"));
 		cstrSequence.Replace(_T("\r"), _T("\r\n"));
 		if (cstrSequence.Right(1) != _T("\n")) cstrSequence.Append(_T("\r\n")); // always add EOL to last inserted line
+
+		// update modal window
+		SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, IDGET, 0);
 	}
 	else MessageBox(nppData._nppHandle, _T("No text selected"), _T(PLUGIN_NAME), MB_ICONINFORMATION);
 }
@@ -1016,29 +1064,32 @@ void doAboutDlg()
 	MessageBox(nppData._nppHandle, aboutMsg, _T(PLUGIN_NAME), MB_OK);
 }
 
-/* ============= Dockable search box part ============= */
+/* ============= Dockable sequence box part ============= */
 
-/*
+
 #define DOCKABLE_DEMO_INDEX findmenuitem(DockableDlgDemo)
 
 void DockableDlgDemo()
 {
-	_SearchBox.setParent(nppData._nppHandle);
+	_SequenceBox.setParent(nppData._nppHandle);
 	tTbData	data = { 0 };
 
-	if (!_SearchBox.isCreated()) {
-		_SearchBox.create(&data);
+	if (!_SequenceBox.isCreated()) {
+		_SequenceBox.create(&data);
 
 		// define the default docking behaviour
 		data.uMask = DWS_DF_CONT_RIGHT;
 
-		data.pszModuleName = _SearchBox.getPluginFileName();
+		data.pszModuleName = _SequenceBox.getPluginFileName();
 
 		// the dlgDlg should be the index of funcItem where the current function pointer is
 		// in this case is DOCKABLE_DEMO_INDEX
 		data.dlgID = 1;
 		SendMessage(nppData._nppHandle, NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
 	}
-	_SearchBox.display();
+	_SequenceBox.display();
+
+	// update modal window
+	SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, IDGET, 0);
 }
-*/
+
