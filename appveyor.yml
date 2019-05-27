@@ -1,4 +1,4 @@
-version: 0.1.{build}
+version: 0.3.0.{build}
 image: Visual Studio 2017
 
 
@@ -57,15 +57,16 @@ artifacts:
   - path: NppTextViz_*.zip
     name: releases
 
-deploy:
-    provider: GitHub
-    auth_token:
-        secure: !!TODO, see https://www.appveyor.com/docs/deployment/github/#provider-settings!!
-    artifact: releases
-    draft: false
-    prerelease: false
-    force_update: true
-    on:
-        appveyor_repo_tag: true
-        PlatformToolset: v141_xp
-        configuration: Release
+#deploy:
+   # provider: GitHub
+   # auth_token:
+       # secure: !!TODO, see https://www.appveyor.com/docs/deployment/github/#provider-settings!!
+   # artifact: releases
+   # draft: false
+   # prerelease: false
+   # force_update: true
+   # on:
+       # appveyor_repo_tag: true
+       # PlatformToolset: v141_xp
+       # configuration: Release
+       # branch: master
