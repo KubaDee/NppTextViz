@@ -31,7 +31,7 @@
 //
 #define PLUGIN_NAME "TextViz"
 const TCHAR NPP_PLUGIN_NAME[] = TEXT(PLUGIN_NAME);
-#define PLUGIN_VERSION "0.3"
+#define PLUGIN_VERSION "0.3.1"
 
 
 //-----------------------------------------------//
