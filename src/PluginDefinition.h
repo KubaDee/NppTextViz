@@ -23,6 +23,7 @@
 //
 #include "PluginInterface.h"
 #include <atlstr.h>
+#include "version.h"
 
 //-------------------------------------//
 //-- STEP 1. DEFINE YOUR PLUGIN NAME --//
@@ -31,7 +32,6 @@
 //
 #define PLUGIN_NAME "TextViz"
 const TCHAR NPP_PLUGIN_NAME[] = TEXT(PLUGIN_NAME);
-#define PLUGIN_VERSION "0.3.1"
 
 
 //-----------------------------------------------//

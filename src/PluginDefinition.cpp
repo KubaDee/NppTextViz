@@ -691,7 +691,7 @@ void CopyCutDelRoutine(unsigned flags, char which)
 					curpos -= (curpos - lps[ln - 1]);				//Only subtract difference
 				}
 				// in last line of text i'm not removing EOL, current cycle is from last line to first, so adding EOL at end of first pass through
-				if (!(flags&SCDS_COPYRECTANGULAR)) removeeoltype = eoltypelen;
+				//if (!(flags&SCDS_COPYRECTANGULAR)) removeeoltype = eoltypelen; // FIX v0.3.2
 			}
 			SENDMSGTOCED(currentEdit, SCI_GOTOPOS, curpos, 0);
 			SENDMSGTOCED(currentEdit, SCI_ENDUNDOACTION, 0, 0);
