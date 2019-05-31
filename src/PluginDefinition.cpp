@@ -598,14 +598,13 @@ void CopyCutDelRoutine(unsigned flags, char which)
 	long p2 = (long)SENDMSGTOCED(currentEdit, SCI_GETSELECTIONEND, 0, 0);
 	if (p1 < p2) {
 		unsigned eoltype = (unsigned)SENDMSGTOCED(currentEdit, SCI_GETEOLMODE, 0, 0);
-		unsigned eoltypelen = eoltype ? 1 : 2; // EOL length
-
+		int addEOL = 1;
 		if (eoltype >= NELEM(eoltypes))
 			eoltype = NELEM(eoltypes) - 1;
 
 		if (SENDMSGTOCED(currentEdit, SCI_SELECTIONISRECTANGLE, 0, 0)) {
 			flags |= SCDS_COPYRECTANGULAR;
-			eoltypelen = 0; // In case of RECT not adding extra EOL
+			addEOL = 0;
 		}
 		else {
 			flags &= ~SCDS_COPYRECTANGULAR;
@@ -617,8 +616,13 @@ void CopyCutDelRoutine(unsigned flags, char which)
 			if (which == '*' || (vis && which == '+') || (!vis && which == '-')) {
 				unsigned ls; if ((unsigned)INVALID_POSITION == (ls = (long)SENDMSGTOCED(currentEdit, SCI_GETLINESELSTARTPOSITION, (blockstart + ln), 0)))
 					continue;
-				unsigned le; if ((unsigned)INVALID_POSITION == (le = (long)SENDMSGTOCED(currentEdit, SCI_GETLINESELENDPOSITION, (blockstart + ln), 0) + (ln + 1 >= blocklines ? 0 : eoltypelen)))
+				unsigned le; if ((unsigned)INVALID_POSITION == (le = (long)SENDMSGTOCED(currentEdit, SCI_GETLINESELENDPOSITION, (blockstart + ln), 0) ))
 					continue;
+
+				if (addEOL && ln + 1 < blocklines) {  // If not RECT and not last line adding EOL
+					// counting len of EOL
+					le += (unsigned)SENDMSGTOCED(currentEdit, SCI_POSITIONFROMLINE, (blockstart + ln), 0) + (unsigned)SENDMSGTOCED(currentEdit, SCI_LINELENGTH, (blockstart + ln), 0) - le;
+				}
 
 				if (!lplen || lpe[lplen - 1] != ls) {
 					lps = (unsigned *)reallocsafe(lps, sizeof(*lps) * (lplen + 1));
@@ -677,12 +681,10 @@ void CopyCutDelRoutine(unsigned flags, char which)
 		}
 
 		if (flags & SCDS_DELETE && !isError) {
-			int removeeoltype = 0;
 			unsigned curpos = (unsigned)SENDMSGTOCED(currentEdit, SCI_GETCURRENTPOS, 0, 0);
 			SENDMSGTOCED(currentEdit, SCI_BEGINUNDOACTION, 0, 0);
 			for (ln = lplen; ln > 0; ln--) {
-				SENDMSGTOCED(currentEdit, SCI_SETTARGETSTART, lps[ln - 1], 0);
-				SENDMSGTOCED(currentEdit, SCI_SETTARGETEND, lpe[ln - 1] + removeeoltype, 0);
+				SENDMSGTOCED(currentEdit, SCI_SETTARGETRANGE, lps[ln - 1], lpe[ln - 1]);
 				SENDMSGTOCED(currentEdit, SCI_REPLACETARGET, 0, "");
 				if (curpos >= lpe[ln - 1]) {						//MODIF Harry: first check if out of entire selection range
 					curpos -= lpe[ln - 1] - lps[ln - 1];
@@ -690,8 +692,6 @@ void CopyCutDelRoutine(unsigned flags, char which)
 				else if (curpos > lps[ln - 1]) {					//MODIF Harry: >= to >, position not affected if selection starts at that position (this is the original check)
 					curpos -= (curpos - lps[ln - 1]);				//Only subtract difference
 				}
-				// in last line of text i'm not removing EOL, current cycle is from last line to first, so adding EOL at end of first pass through
-				//if (!(flags&SCDS_COPYRECTANGULAR)) removeeoltype = eoltypelen; // FIX v0.3.2
 			}
 			SENDMSGTOCED(currentEdit, SCI_GOTOPOS, curpos, 0);
 			SENDMSGTOCED(currentEdit, SCI_ENDUNDOACTION, 0, 0);

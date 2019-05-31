@@ -7,8 +7,8 @@ Plugin is still in beta. So if you find any issue please let me know.
 
 Instruction:
 ---
-1. Paste the file "NppTextViz.dll" to Notepad++ plugin folder
-2. Copy single line text to clipboard or select some text
+1. Install via Plugins Admin or paste the file "NppTextViz.dll" to Notepad++ plugin folder
+2. Copy single line text to clipboard or select any block of text
 3. From plugin menu choose action
 4. Enjoy profit :)
 

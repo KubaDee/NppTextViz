@@ -45,9 +45,9 @@
     <ResourceCompile Include="..\src\NppTextViz.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9D04DBD5-E12E-44E0-A683-6F43F21D533B}</ProjectGuid>
+    <ProjectGuid>{F99262E7-FBE7-498F-8E7F-CD3EFFB456A8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>NppTextviz</RootNamespace>
+    <RootNamespace>NppTextViz</RootNamespace>
     <ProjectName>NppTextViz</ProjectName>
     <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
