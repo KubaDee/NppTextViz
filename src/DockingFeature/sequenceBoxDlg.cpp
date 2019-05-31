@@ -77,6 +77,48 @@ INT_PTR CALLBACK SequenceBoxDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM
 					return true;
 				}
 
+				case IDRUNALL: // run all steps from first to last
+				{
+					doSequenceAll();
+					return true;
+				}
+
+				case IDRUNFIRST: // run first stop and then pause
+				{
+					doSequenceStart();
+					return true;
+				}
+
+				case IDRUNNEXT: // run next step
+				{
+					doSequenceNext();
+					return true;
+				}
+
+				case IDRUNREST: // run rest of sequence
+				{
+					doSequenceRest();
+					return true;
+				}
+
+				case ID_SETSELECTED: // copy selected as sequence
+				{
+					doSelectedAsSequence();
+					return true;
+				}
+				
+				case ID_CLEAR: // clear sequence
+				{
+					doSequenceClear();
+					return true;
+				}
+
+				case ID_SHOWALL: // show all lines
+				{
+					doShowAllLines();
+					return true;
+				}
+
 				case ID_CHECKEDIT: // enable/diasble button + text box
 				{
 					setInvertEditButton();
@@ -85,7 +127,8 @@ INT_PTR CALLBACK SequenceBoxDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM
 
 				case ID_UPDATE_SEQUENCE_SELECTED: // update selected linex in sequence
 				{
-					SendMessage(GetDlgItem(_hSelf, ID_SEQUENCE_EDIT), EM_SETSEL, 0, GetLineBegin() - 1);
+
+					SendMessage(GetDlgItem(_hSelf, ID_SEQUENCE_EDIT), EM_SETSEL, lParam, GetLineBegin() - 1);
 					return true;
 				}
 			}

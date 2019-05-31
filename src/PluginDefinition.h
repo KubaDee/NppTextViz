@@ -109,10 +109,13 @@ void doAboutDlg();
 void doHideSelectedOrAllLines();
 void doShowSelectedOrAllLines();
 void doInvertSelectedOrAllLines();
+void doShowAllLines();
 void doInsertSequence();
 void doSequenceStart();
 void doSequenceNext();
 void doSequenceRest();
 void doSequenceAll();
+void doSequenceClear();
+void doSequenceReset();
 void doSelectedAsSequence();
 #endif //PLUGINDEFINITION_H

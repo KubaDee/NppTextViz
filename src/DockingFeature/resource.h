@@ -31,10 +31,17 @@
 
 #define	IDD_SEQUENCEBOX		2500
 #define	ID_SEQUENCE_EDIT	(IDD_SEQUENCEBOX + 1)
-#define	ID_UGO_STATIC       (IDD_SEQUENCEBOX + 5)
+#define	ID_SEQUENCE_LABEL   (IDD_SEQUENCEBOX + 5)
 #define IDGET               (IDD_SEQUENCEBOX + 11)
 #define IDSET               (IDD_SEQUENCEBOX + 12)
+#define IDRUNALL            (IDD_SEQUENCEBOX + 13)
+#define IDRUNFIRST          (IDD_SEQUENCEBOX + 14)
+#define IDRUNNEXT           (IDD_SEQUENCEBOX + 15)
+#define IDRUNREST           (IDD_SEQUENCEBOX + 16)
 #define ID_CHECKEDIT        (IDD_SEQUENCEBOX + 20)
 #define ID_UPDATE_SEQUENCE_SELECTED (IDD_SEQUENCEBOX + 21) // message for handle select text in text box
+#define ID_SETSELECTED      (IDD_SEQUENCEBOX + 22) // message for handle select text in text box
+#define ID_CLEAR            (IDD_SEQUENCEBOX + 23) // message for clear sequence
+#define ID_SHOWALL          (IDD_SEQUENCEBOX + 24) // message for clear sequence
 
 #endif // RESOURCE_H

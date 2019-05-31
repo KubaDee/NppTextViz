@@ -451,7 +451,6 @@ void doAppendAll()
 	CopyCutDelRoutine(SCDS_COPYAPPEND | SCDS_COPY, '*');
 }
 
-
 /// Read TCHAR from Clipboard (UNICODE)
 CString GetClipboard()
 {
@@ -874,6 +873,16 @@ void doInvertSelectedOrAllLines()
 	InvertSelectedOrAllLines('!');
 }
 
+void doShowAllLines()
+{
+	INT_CURRENTEDIT;
+	GET_CURRENTEDIT;
+	doSequenceReset();
+	long curpos = (long)SENDMSGTOCED(currentEdit, SCI_GETCURRENTPOS, 0, 0);
+	long curline = (long)SENDMSGTOCED(currentEdit, SCI_LINEFROMPOSITION, curpos, 0);
+	InvertSelectionRoutine(currentEdit, '+', curline, 0, 0);
+}
+
 void doInsertSequence()
 {
 	INT_CURRENTEDIT;
@@ -1007,10 +1016,21 @@ void doSequenceStart()
 	doSequenceNext();
 }
 
+void doSequenceReset()
+{
+	stStepPosition = 0;
+	SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, ID_UPDATE_SEQUENCE_SELECTED, -1); // to refresh sequence selected
+}
+
 void doSequenceAll()
 {
 	doSequenceStart();
 	doSequenceRest();
+}
+
+void doSequenceClear()
+{
+	SetSequence(_T(""));
 }
 
 void doSelectedAsSequence()
