@@ -202,8 +202,8 @@ void commandMenuInit()
 	//            ShortcutKey *shortcut,          // optional. Define a shortcut to trigger this command
 	//            bool check0nInit                // optional. Make this menu item be checked visually
 	//            );
-	setCommand(0,  TEXT("Hide selected or hide all lines"), doHideSelectedOrAllLines, NULL, false);
-	setCommand(1,  TEXT("Show selected or reset all lines"), doShowSelectedOrAllLines, NULL, false);
+	setCommand(0,  TEXT("Show selected or reset all lines"), doShowSelectedOrAllLines, NULL, false);
+	setCommand(1,  TEXT("Hide selected or hide all lines"), doHideSelectedOrAllLines, NULL, false);
 	setCommand(2,  TEXT("Invert selected visibility"), doInvertSelectedOrAllLines, NULL, false);
 	setCommand(3,  TEXT("----"), NULL, NULL, false);
 	setCommand(4,  TEXT("Hide lines with clipboard text"), doLinesHideWith, NULL, false);
@@ -1067,7 +1067,7 @@ void doAboutDlg()
 /* ============= Dockable sequence box part ============= */
 
 
-#define DOCKABLE_DEMO_INDEX findmenuitem(DockableDlgDemo)
+#define SEARCHBOX_DLG_INDEX FindMenuItem(DockableDlgDemo)
 
 void DockableDlgDemo()
 {
@@ -1083,8 +1083,8 @@ void DockableDlgDemo()
 		data.pszModuleName = _SequenceBox.getPluginFileName();
 
 		// the dlgDlg should be the index of funcItem where the current function pointer is
-		// in this case is DOCKABLE_DEMO_INDEX
-		data.dlgID = 1;
+		// in this case is SEARCHBOX_DLG_INDEX
+		data.dlgID = (int)SEARCHBOX_DLG_INDEX;
 		SendMessage(nppData._nppHandle, NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
 	}
 	_SequenceBox.display();
