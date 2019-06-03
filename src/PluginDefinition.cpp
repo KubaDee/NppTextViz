@@ -1030,7 +1030,8 @@ void doSequenceAll()
 
 void doSequenceClear()
 {
-	SetSequence(_T(""));
+	cstrSequence.Format(_T(""));
+	SendMessage(_SequenceBox.getHSelf(), WM_COMMAND, IDGET, 0);
 }
 
 void doSelectedAsSequence()
