@@ -22,6 +22,11 @@ Chris Severance for TextFX
 Latest Updates:
 ----
 
+### v0.4
+Enhancing in Sequence dialog  
+Minor code optimizations  
+And several bugs fixed
+
 ### v0.3.2
 Fixed bug in Delete selected text
 
