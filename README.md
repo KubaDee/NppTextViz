@@ -1,8 +1,8 @@
 # NppTextViz
 ### by Jakub Dvorak
 
-This plugin is meant to show or hide lines with or without clipboard text. Or simply select several lines and hide them. Plugin is based on TextFX plugin v0.25 by Chris Severance.
-Plugin is still in beta. So if you find any issue please let me know.
+This plugin is meant to hide or show lines to help you analysing larger files - logs for example. You can hide all lines that contain text pattern. Or simply select several lines and hide them.  
+Plugin is based on TextFX plugin v0.25 by Chris Severance.
 
 
 Instruction:
