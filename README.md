@@ -22,6 +22,9 @@ Chris Severance for TextFX
 Latest Updates:
 ----
 
+### v0.4.1
+Faster removing visible/hidden lines in larger files
+
 ### v0.4
 Enhancing in Sequence dialog  
 Minor code optimizations  

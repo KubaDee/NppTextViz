@@ -683,7 +683,14 @@ void CopyCutDelRoutine(unsigned flags, char which)
 			unsigned curpos = (unsigned)SENDMSGTOCED(currentEdit, SCI_GETCURRENTPOS, 0, 0);
 			SENDMSGTOCED(currentEdit, SCI_BEGINUNDOACTION, 0, 0);
 			for (ln = lplen; ln > 0; ln--) {
-				SENDMSGTOCED(currentEdit, SCI_SETTARGETRANGE, lps[ln - 1], lpe[ln - 1]);
+				#define REMOVING_RANGE 10000 // removing loop range
+				if (lpe[ln - 1] > REMOVING_RANGE) // unsigned variable check - size_t cannot be negative => for very small number fails condtition in for-cycle
+					for (size_t ii = lps[ln - 1]; ii <= lpe[ln - 1] - REMOVING_RANGE; ii += REMOVING_RANGE) // removing periodically untill last-1 iteration
+					{
+						SENDMSGTOCED(currentEdit, SCI_SETTARGETRANGE, lps[ln - 1], lps[ln - 1] + REMOVING_RANGE);
+						SENDMSGTOCED(currentEdit, SCI_REPLACETARGET, 0, "");
+					}
+				SENDMSGTOCED(currentEdit, SCI_SETTARGETRANGE, lps[ln - 1], lps[ln - 1] + (lpe[ln - 1] - lps[ln - 1]) % REMOVING_RANGE); // removing rest of range
 				SENDMSGTOCED(currentEdit, SCI_REPLACETARGET, 0, "");
 				if (curpos >= lpe[ln - 1]) {						//MODIF Harry: first check if out of entire selection range
 					curpos -= lpe[ln - 1] - lps[ln - 1];
