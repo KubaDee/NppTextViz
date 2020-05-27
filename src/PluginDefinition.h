@@ -30,7 +30,6 @@
 //-------------------------------------//
 // Here define your plugin name
 //
-#define PLUGIN_NAME "TextViz"
 const TCHAR NPP_PLUGIN_NAME[] = TEXT(PLUGIN_NAME);
 
 

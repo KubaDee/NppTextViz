@@ -18,6 +18,8 @@
 #ifndef VERSION_H
 #define VERSION_H
 
+#define PLUGIN_NAME "TextViz"
+
 #define VERSION_VALUE "0.4.1\0"
 #define VERSION_VALUE_LONG "0.4.1.0\0"
 #define VERSION_DIGITALVALUE 0, 4, 1, 0
