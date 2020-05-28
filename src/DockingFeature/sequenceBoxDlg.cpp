@@ -142,9 +142,11 @@ INT_PTR CALLBACK SequenceBoxDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM
 				int cy = HIWORD(lParam);
 				int dx = cx - save_rect.right;
 				int dy = cy - save_rect.bottom;
-				
-				move_resize(hwDlgItem, 0, 0, dx, dy);
-				GetClientRect(_hSelf, &save_rect);
+				if (cy > 130)	// fix for inner textbox overflow out of main window
+				{
+					move_resize(hwDlgItem, 0, 0, dx, dy);
+					GetClientRect(_hSelf, &save_rect);
+				}
 				return true;
 			}
 			GetClientRect(_hSelf, &save_rect);
